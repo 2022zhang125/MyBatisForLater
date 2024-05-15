@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.believesun.mybatis.mapper.StudentMapper">
+    <select id="selectAllRtnBigMap" resultType="map">
+        select * from t_student;
+    </select>
+    <!--返回List<Map>所有信息-->
+    <select id="selectAll" resultType="map">
+        select * from t_student;
+    </select>
+    <!--ResultType = "Java.Util.Map" 有别名-->
+    <select id="selectByIdRetMap" resultType="map">
+        select * from t_student where id = #{id}
+    </select>
+    <select id="selectStudentBySex">
+        select * from t_student where sex = #{sex}
+    </select>
+    <select id="selectStudentByXh" resultType="student">
+        select * from t_student where xh = #{xh}
+    </select>
+</mapper>

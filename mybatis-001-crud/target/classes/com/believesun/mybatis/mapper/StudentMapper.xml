@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.believesun.mybatis.mapper.StudentMapper">
+    <insert id="insert">
+        insert into t_student values(#{id},#{name},#{xh},#{sex})
+    </insert>
+    <!--
+        int deleteById(String id);
+        int update(Student student);
+        List<Student> selectAll();
+        Student selectByName(String name);
+    -->
+    <delete id="deleteById">
+        delete from t_student where id = #{id}
+    </delete>
+
+    <update id="update">
+        update
+            t_student
+        set
+            name = #{name},xh = #{xh},sex = #{sex}
+        where
+            id = #{id}
+    </update>
+
+    <select id="selectAll" resultType="student">
+        select
+            *
+        from
+            t_student
+    </select>
+
+    <select id="selectByName" resultType="student">
+        select * from t_student where name = #{name}
+    </select>
+
+</mapper>

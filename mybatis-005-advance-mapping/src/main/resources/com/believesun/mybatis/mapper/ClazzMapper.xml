@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.believesun.mybatis.mapper.ClazzMapper">
+    <resultMap id="selectByStep1Map" type="clazz">
+        <id property="cid" column="cid" />
+        <result property="cname" column="cname" />
+        <collection property="studentList"
+                    ofType="student"
+                    column="cid"
+                    select="com.believesun.mybatis.mapper.StudentMapper.selectByCid" />
+    </resultMap>
+    <select id="selectByStep1" resultType="clazz" resultMap="selectByStep1Map">
+        select * from t_clazz where cid = #{cid}
+    </select>
+    <select id="selectByCidStep2" resultType="clazz">
+        select * from t_clazz where cid = #{cid}
+    </select>
+
+    <resultMap id="selectByCollectionResultMap" type="clazz">
+        <id property="cid" column="cid" />
+        <result property="cname" column="cname" />
+        <!--
+            一对多，这里是collection，是集合的意思
+            ofType:用于指定集合当做元素类型
+        -->
+        <collection property="studentList" ofType="student">
+            <id property="sid" column="sid"/>
+            <result property="sname" column="sname" />
+        </collection>
+
+    </resultMap>
+    <select id="selectByCollection" resultMap="selectByCollectionResultMap">
+        select s.sid,s.sname,c.cid,c.cname
+        from t_clazz c left join t_stu s
+        on c.cid = s.cid
+        where c.cid = #{cid}
+    </select>
+</mapper>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.believesun.mybatis.mapper.StudentMapper">
+    <select id="selectByCid" resultType="student">
+        select * from t_stu where cid = #{cid}
+    </select>
+    <!--分布查询-->
+    <resultMap id="selectBySidByStepMap" type="student">
+        <id property="sid" column="sid"/>
+        <result property="sname" column="sname"/>
+        <!--
+            这里需要给 第二步的接口传入一个 cid，所以此时要用到column标签，将查询的cid传入到select中
+            进行处理，将最后处理完全的Clazz对象传入到clazz
+            将最后的查询结果值与clazz属性名进行绑定
+
+            select这里需要一个SQLID，也就是我们的namespace + id
+            全限定接口名+方法名 === copy 接口的方法名
+        -->
+        <association property="clazz"
+                     select="com.believesun.mybatis.mapper.ClazzMapper.selectByCidStep2"
+                     column="cid"/>
+                     <!--fetchType="lazy"--> <!--开启懒加载,只是局部的-->
+    </resultMap>
+
+    <select id="selectBySidByStep1" resultMap="selectBySidByStepMap">
+        select *  from t_stu where sid = #{sid}
+    </select>
+
+    <resultMap id="studentMapAssociation" type="student">
+        <id property="sid" column="sid"/>
+        <result property="sname" column="sname"/>
+        <association property="clazz" javaType="Clazz">
+            <id property="cid" column="cid"/>
+            <result property="cname" column="cname"/>
+        </association>
+    </resultMap>
+
+    <select id="selectBySidAssociation" resultMap="studentMapAssociation">
+        select
+            s.sid,s.sname,c.cid,c.cname
+        from
+            t_stu s left join t_clazz c
+        on
+            s.cid = c.cid
+        where
+            s.sid = #{sid}
+    </select>
+
+
+    <resultMap id="studentMap" type="student">
+        <id property="sid" column="sid"/>
+        <result property="sname" column="sname"/>
+        <result property="clazz.cid" column="cid"/>
+        <result property="clazz.cname" column="cname"/>
+    </resultMap>
+    <!--通过sid查询学生所有信息-->
+    <select id="selectBySid" resultType="student" resultMap="studentMap">
+        select
+            s.sid,s.sname,c.cid,c.cname
+        from
+            t_stu s left join t_clazz c
+        on
+            s.cid = c.cid
+        where
+            s.sid = #{sid}
+    </select>
+</mapper>
